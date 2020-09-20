@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<title>Mon interface </title>
+</head>
+
+<body>
+<div id="app">
+    <div class="container">
+        <div class="row">
+          <p class="paragraphe">
+            Login : <input type="text" v-model="user"/>  
+            On est connecté en tant que {{user}}</p>
+    </div>
+
+    <h1 class="display-4" v-if="commandes.length > 0">Produits commandés</h1>
+   <div class="row">
+<fiche-produit v-for="commande in commandes" v-bind:nom="commande" role="recapitulatif"></fiche-produit>
+
+   </div>
+   
+   <!-- <ul>
+    <li v-for="commande in commandes"> {{commande}}</li>
+    <ul>
+
+    </ul> -->
+
+    <h1 v-bind:class="affichage">Produits disponibles</h1>
+    <div class="row">
+
+        <fiche-produit v-for="produit in produits" v-bind:nom="produit" v-on:commande-passee="commander">
+
+        </fiche-produit>
+
+        <div class="col-3" v-for="produit in produits">
+            <p class="paragraphe">
+                {{ produit }} </p>
+                <button v-on:click="commander(produit)">Commandez</button>
+           
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<script>
+
+Vue.component('fiche-produit',{
+
+template: `
+<div class="col-3">
+<p class="paragraphe">{{ nom }}<br>
+    <button v-on:click="passer_commande(nom)" v-if="role == 'commande'">Commandez</button></p>
+</div>`,
+props: ['nom', 'role'], 
+methods: {
+
+passer_commande: function(produit){
+    this.$emit('commande-passee', produit)
+}
+
+}
+
+})
+
+var app = new Vue({
+    el: "#app",
+    data: {
+        user : "pikachu",
+        produits: ["Pizza", "Hamburger", "Cheeseburger", "Tacos"],
+        commandes: [],
+        affichage:"display-2"
+    }, 
+     methods: {
+
+        commander: function(produit) {
+             console.log(produit);
+            this.commandes.push(produit);
+            
+
+        }
+
+}
+
+
+})
+</script>
+
+</body>
+</html>
